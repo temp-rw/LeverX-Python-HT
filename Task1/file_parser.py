@@ -4,10 +4,10 @@ from json import loads
 
 class IParser:
     def create_data_path(self, file_path: str, file_name: str) -> str:
-        pass
+        raise NotImplementedError
 
     def extract_text(self, full_file_name: str) -> dict:
-        pass
+        raise NotImplementedError
 
 
 class JSONParser(IParser):
@@ -18,10 +18,10 @@ class JSONParser(IParser):
 
     def create_data_path(self, file_path: str, file_name: str) -> str:
         """
-        loads path where the file placed, change current working directory
+        Creates data path string
         :param file_path: absolute path to json file
         :param file_name: file name
-        :return:
+        :return: file name with path
         """
         full_file_name = os.path.join(file_path, file_name)
         return full_file_name
