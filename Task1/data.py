@@ -33,5 +33,11 @@ class Room:
 
         self.students.append(student)
 
+    def add_students(self, students: List[Student]):
+        if self.students is None:
+            self.students = []
+
+        self.students.extend(students)
+
     def to_dict(self) -> dict:
         return asdict(self, dict_factory=dict)
