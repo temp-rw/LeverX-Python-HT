@@ -15,5 +15,5 @@ class SaveFile(ISave):
         self.file = None
 
     def save(self, data: str or bytes):
-        with open(os.path.join(self.file_path, self.file_name + "." + self.file_format), self.mode) as file:
-            file.write(data)
+        with open(os.path.join(self.file_path, self.file_name + "." + self.file_format), self.mode) as self.file:
+            self.file.write(data)

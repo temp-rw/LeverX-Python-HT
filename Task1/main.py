@@ -24,12 +24,13 @@ def main():
     for room in dict_rooms:
         rooms.append(Room.room_mapper(room))
 
-    rooms.sort(key=lambda rm: rm.id)
     students.sort(key=lambda st: st.room)
     for room in rooms:
         for student in students:
             if student.room == room.id:
                 room.add_student(student)
+            else:
+                break
 
     serialized_rooms = RoomSerializer().serialize(rooms, parameters.get('format'))
     SaveFile(parameters.get('rooms'), output_file_name, parameters.get('format'), 'w').save(serialized_rooms)
