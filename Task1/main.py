@@ -1,7 +1,7 @@
 from console_reader import ConsoleReader
 from data import Student, Room
 from file_parser import JSONParser
-from output import SaveFile
+from output import SaveToFile
 from serializers import RoomSerializer
 
 
