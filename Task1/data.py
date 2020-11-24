@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from dataclasses import asdict
 from typing import List
 
 
@@ -13,11 +14,7 @@ class Student:
         return cls(id=data.get('id'), name=data.get('name'), room=data.get('room'))
 
     def to_dict(self) -> dict:
-        student_dict = dict()
-        student_dict['id'] = self.id
-        student_dict['name'] = self.name
-        student_dict['room'] = self.room
-        return student_dict
+        return asdict(self, dict_factory=dict)
 
 
 @dataclass
@@ -31,14 +28,10 @@ class Room:
         return cls(id=data.get('id'), name=data.get('name'))
 
     def add_student(self, student: Student):
-        if self.students:
-            self.students.append(student)
-        else:
-            self.students = [student]
+        if self.students is None:
+            self.students = []
+
+        self.students.append(student)
 
     def to_dict(self) -> dict:
-        room_dict = dict()
-        room_dict['id'] = self.id
-        room_dict['name'] = self.name
-        room_dict['students'] = [student.to_dict() for student in self.students]
-        return room_dict
+        return asdict(self, dict_factory=dict)

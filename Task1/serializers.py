@@ -106,6 +106,3 @@ class RoomSerializer(ISerializer):
             element_room_name.text = str(room.name)
 
         return rooms_tree
-
-
-# prettify = minidom.parseString(string).toprettyxml(indent="  ")

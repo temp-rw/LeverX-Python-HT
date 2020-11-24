@@ -1,3 +1,4 @@
+from typing import Union
 import os
 from json import loads
 
@@ -26,7 +27,7 @@ class JSONParser(IParser):
         full_file_name = os.path.join(file_path, file_name)
         return full_file_name
 
-    def extract_text(self, full_file_name: str) -> dict or list:
+    def extract_text(self, full_file_name: str) -> Union[dict, list]:
         """
         Extracting json file to python dict if single, else to list
         :param full_file_name: string that consists of absolute path and file name
