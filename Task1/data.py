@@ -11,7 +11,7 @@ class Student:
 
     @classmethod
     def student_mapper(cls, data: dict):
-        return cls(id=data.get('id'), name=data.get('name'), room=data.get('room'))
+        return cls(id=data.get("id"), name=data.get("name"), room=data.get("room"))
 
     def to_dict(self) -> dict:
         return asdict(self, dict_factory=dict)
@@ -25,7 +25,7 @@ class Room:
 
     @classmethod
     def room_mapper(cls, data: dict):
-        return cls(id=data.get('id'), name=data.get('name'))
+        return cls(id=data.get("id"), name=data.get("name"))
 
     def add_student(self, student: Student):
         if self.students is None:
