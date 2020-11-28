@@ -1,12 +1,12 @@
 import os
 
 
-class ISave:
+class ISaver:
     def save(self, data: str):
         raise NotImplementedError
 
 
-class SaveToFile(ISave):
+class FileSaver(ISaver):
     def __init__(self, file_path: str, file_name: str, file_format: str, mode: str):
         self.file_path = file_path
         self.file_name = file_name

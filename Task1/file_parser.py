@@ -33,7 +33,7 @@ class JSONParser(IParser):
         :param full_file_name: string that consists of absolute path and file name
         :return: dict or list of dicts
         """
-        with open(full_file_name, encoding='utf-8') as file:
+        with open(full_file_name, encoding="utf-8") as file:
             data = file.read()
         data = loads(data)
         return data
