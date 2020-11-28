@@ -1,21 +1,20 @@
 from dataclasses import asdict
 from dataclasses import dataclass
-from datetime import date
-from typing import List
+from datetime import datetime
 
 
 @dataclass
 class Student:
     id: int
     name: str
-    birthday: date
-    room: int
+    birthday: datetime
+    room_id: int
     sex: str
 
     @classmethod
     def student_mapper(cls, data: dict):
         return cls(id=data.get('id'), name=data.get('name'), birthday=data.get('birthday'),
-                   room=data.get('room'), sex=data.get('name'))
+                   room_id=data.get('room'), sex=data.get('sex'))
 
     def to_dict(self) -> dict:
         return asdict(self, dict_factory=dict)
@@ -25,23 +24,10 @@ class Student:
 class Room:
     id: int
     name: str
-    students: List[Student]
 
     @classmethod
     def room_mapper(cls, data: dict):
         return cls(id=data.get('id'), name=data.get('name'))
-
-    def add_student(self, student: Student):
-        if self.students is None:
-            self.students = []
-
-        self.students.append(student)
-
-    def add_students(self, students: List[Student]):
-        if self.students is None:
-            self.students = []
-
-        self.students.extend(students)
 
     def to_dict(self) -> dict:
         return asdict(self, dict_factory=dict)
