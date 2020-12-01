@@ -15,18 +15,18 @@ class IDBManager:
     def delete(self, table: str, column_value: Dict, limit: int = None):
         raise NotImplementedError
 
-    def _run_query(self, query: str, value: Union[Tuple, List]):
+    def _run_query(self, query: str, value: Union[Tuple, List[Tuple]]):
         raise NotImplementedError
 
 
 class DBManager(IDBManager):
-    def __init__(self, **kwargs):    # , host: str, user: str, password: str, database: str):
-        self.db = kwargs
+    def __init__(self, host: str, user: str, password: str, database: str):
+        self.db = {"host": host, "user": user, "password": password, "database": database}
 
     def create(self, table: str, columns_values: List[Dict]):
         if table.isalnum():
             keys = "(" + ", ".join([key for key in columns_values[0].keys()]) + ")"
-            value_positions = "(" + ", ".join(["%s" for key in columns_values[0].keys()]) + ")"
+            value_positions = "(" + ", ".join(["%s" for _ in columns_values[0].keys()]) + ")"
             values = []
             for item in columns_values:
                 query_template = rf"INSERT INTO {table} {keys} VALUES {value_positions}"
@@ -47,8 +47,14 @@ class DBManager(IDBManager):
     def delete(self, table: str, column_value: Dict, limit: int = None):
         pass
 
-    def _run_query(self, query: str, value: List[Tuple]):
-        with mysql.connector.connect(**self.db) as connection:
-            cursor = connection.cursor()
-            cursor.executemany(query, value)
-            connection.commit()
+    def _run_query(self, query: str, value: Union[Tuple, List[Tuple]]):
+        if isinstance(value, List):
+            with mysql.connector.connect(**self.db) as connection:
+                cursor = connection.cursor()
+                cursor.executemany(query, value)
+                connection.commit()
+        elif isinstance(value, Tuple):
+            with mysql.connector.connect(**self.db) as connection:
+                cursor = connection.cursor()
+                cursor.execute(query, value)
+                connection.commit()

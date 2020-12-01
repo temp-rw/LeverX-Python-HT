@@ -13,7 +13,7 @@ def main():
     parameters = {
         "students": r"D:\Python\LeverX HT\LeverX-Python-HT\Task4",
         "rooms": r"D:\Python\LeverX HT\LeverX-Python-HT\Task4",
-        "format": "json"
+        "format": "json",
     }
     output_file_name = "rooms_with_students"
     parser = JSONParser()
