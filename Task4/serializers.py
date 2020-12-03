@@ -27,11 +27,14 @@ class JSONSerializer(ISerializer):
 
 
 class XMLSerializer(ISerializer):
-    def __init__(self, root_element_name: str = "root"):
+    def __init__(self):
         self.serialized = None
-        self.root_element_name = root_element_name
+        self.root_element_name = "root"
 
-    def serialize(self, data: Union[Dict, List[Dict]]) -> str:
+    def serialize(self, data: Union[Dict, List[Dict]], root_element_name: str = None) -> str:
+        if root_element_name is not None:
+            self.root_element_name = root_element_name
+
         list_of_dicts = []
         if isinstance(data, List):
             for element in data:

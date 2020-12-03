@@ -1,21 +1,22 @@
+import os
+
+from mysql.connector.errors import IntegrityError
+
 from console_reader import ConsoleReader
-from data import Student, Room
+from db_manager import DBManager
 from file_parser import JSONParser
 from output import FileSaver
+from queries import *
 from serializers import JSONSerializer, XMLSerializer
-from db_manager import DBManager
 
 
 def main():
+    db_option_file_path = "./main.cnf"
     serializers = {"json": JSONSerializer, "xml": XMLSerializer}
-    # command_reader = ConsoleReader()
-    # parameters = command_reader.read_from_command_line()
-    parameters = {
-        "students": r"D:\Python\LeverX HT\LeverX-Python-HT\Task4",
-        "rooms": r"D:\Python\LeverX HT\LeverX-Python-HT\Task4",
-        "format": "json",
-    }
-    output_file_name = "rooms_with_students"
+    command_reader = ConsoleReader()
+    parameters = command_reader.read_from_command_line()
+
+    output_path = os.getcwd()
     parser = JSONParser()
 
     students_path = parser.create_data_path(parameters.get("students"), "students.json")
@@ -23,20 +24,40 @@ def main():
     if not isinstance(dict_students, list):
         dict_students = list(dict_students)
 
-    for index, student in enumerate(dict_students):
-        dict_students[index] = Student.student_mapper(student).to_dict()
-
     rooms_path = parser.create_data_path(parameters.get("students"), "rooms.json")
     dict_rooms = parser.extract_text(rooms_path)
     if not isinstance(dict_rooms, list):
         dict_rooms = list(dict_rooms)
 
-    for index, room in enumerate(dict_rooms):
-        dict_rooms[index] = Room.room_mapper(room).to_dict()
+    db_manager = DBManager(option_files=db_option_file_path)
+    try:
+        db_manager.create("rooms", columns_values=dict_rooms)
+        db_manager.create("students", columns_values=dict_students)
+    except IntegrityError as err:
+        pass
 
-    db_manager = DBManager(host="127.0.0.1", user="root", password="1721185", database="roomsdb")
-    db_manager.create("rooms", columns_values=dict_rooms)
-    db_manager.create("students", columns_values=dict_students)
+    serializer = serializers.get(parameters.get("format"))
+    list_of_dict_students = db_manager.get_data_by_custom_query(
+        ["id", "name", "students_in_room"], num_of_students_in_rooms
+    )
+    serialized = serializer().serialize(list_of_dict_students)
+    saver = FileSaver(output_path, "num_of_students_in_rooms", parameters.get("format"), "w")
+    saver.save(serialized)
+
+    list_of_dict_students = db_manager.get_data_by_custom_query(["id", "name"], top5_rooms_lowest_avg_age)
+    serialized = serializer().serialize(list_of_dict_students)
+    saver = FileSaver(output_path, "top5_rooms_lowest_avg_age", parameters.get("format"), "w")
+    saver.save(serialized)
+
+    list_of_dict_students = db_manager.get_data_by_custom_query(["id", "name"], top5_rooms_biggest_age_diff)
+    serialized = serializer().serialize(list_of_dict_students)
+    saver = FileSaver(output_path, "top5_rooms_biggest_age_diff", parameters.get("format"), "w")
+    saver.save(serialized)
+
+    list_of_dict_students = db_manager.get_data_by_custom_query(["id", "name"], rooms_with_diff_sex)
+    serialized = serializer().serialize(list_of_dict_students)
+    saver = FileSaver(output_path, "rooms_with_diff_sex", parameters.get("format"), "w")
+    saver.save(serialized)
 
 
 if __name__ == "__main__":
