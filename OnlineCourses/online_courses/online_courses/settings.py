@@ -138,4 +138,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-MEDIA_ROOT = 'D:\Python\LeverX HT\LeverX-Python-HT\OnlineCourses'
+MEDIA_ROOT = env('MEDIA_ROOT')
+
+
+PASSWORD_HASHERS = [
+    'courses.hashers.UserPBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher'
+]

@@ -6,7 +6,7 @@ from .models import User
 class UserBaseAuthentication(BaseAuthentication):
     def authenticate(self, request):
         name = request.META.get('HTTP_USERNAME')
-        password_hash = (request.META.get('HTTP_PASSWORD'))
+        password = (request.META.get('HTTP_PASSWORD'))
         if not name:
             return None
 
