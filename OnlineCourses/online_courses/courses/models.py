@@ -8,30 +8,7 @@ def user_directory_path(instance, filename):
     return f"user_{instance.user.id}{filename}"
 
 
-# class UserManager(models.Manager):
-#
-#     def _create_user(self, name, email, role, password=None):
-#         email = self.normalize_email(email)
-#         user = self.model(name=name, email=email, role=role)
-#         user.set_password(password)
-#         user.save()
-#
-#         return user
-#
-#     def create_user(self, name, email, role, password=None):
-#         if not name:
-#             raise ValueError("Name must ve provided")
-#
-#         if not email:
-#             raise ValueError("Email must ve provided")
-#
-#         if not role:
-#             raise ValueError("Role must ve provided")
-#
-#         return self._create_user(name=name, email=email, role=role)
-
-
-class User(AbstractBaseUser, PermissionsMixin):
+class User(models.Model):
     TEACHER = "teacher"
     STUDENT = "student"
     STAFF = "staff"
