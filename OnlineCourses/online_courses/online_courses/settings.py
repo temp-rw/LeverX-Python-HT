@@ -33,6 +33,8 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'courses.User'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
@@ -142,6 +144,5 @@ MEDIA_ROOT = env('MEDIA_ROOT')
 
 
 PASSWORD_HASHERS = [
-    'courses.hashers.UserPBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher'
 ]

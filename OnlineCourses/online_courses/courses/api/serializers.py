@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from . import models
+
+from .. import models
+from ..models import User
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -16,15 +18,12 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
 class UserSerializer(DynamicFieldsModelSerializer):
     class Meta:
-        model = models.User
-        fields = '__all__'
-        extra_kwargs = {'password': {'write_only': True}}
+        model = User
+        fields = ['email', 'name', 'role', 'is_superuser', 'is_staff', 'password']
+        # extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = models.User(
-            email=validated_data['email'],
-            name=validated_data['name']
-        )
+        user = User(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
         return user
@@ -37,12 +36,12 @@ class UserSerializer(DynamicFieldsModelSerializer):
         return user
 
 
-# class CourseSerializer(DynamicFieldsModelSerializer):
+# class CourseSerializer(serializers.ModelSerializer):
 #     course_user = models.CourseUser
 #
 #     class Meta:
 #         model = models.Course
-#         fields = ['id', 'name', 'created']
+#         fields = ['id', 'name']
 
 
 # class LectionSerializer(DynamicFieldsModelSerializer):
