@@ -33,13 +33,20 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
+APPEND_SLASH = True
+
 AUTH_USER_MODEL = 'courses.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-    ]
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+
 }
 
 # Application definition
@@ -51,8 +58,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'courses',
     'rest_framework',
-    'courses'
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

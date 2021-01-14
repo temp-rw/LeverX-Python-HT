@@ -12,56 +12,24 @@ def user_directory_path(instance, filename):
 class User(AbstractBaseUser, PermissionsMixin):
     TEACHER = "teacher"
     STUDENT = "student"
+    STAFF = "staff"
     USER_ROLE_CHOICES = [
         (TEACHER, "Teacher"),
         (STUDENT, "Student"),
+        (STAFF, "Staff"),
     ]
 
     email = models.EmailField(unique=True, blank=False, validators=[validators.validate_email])
-    is_staff = models.BooleanField(default=False)
     name = models.CharField(max_length=254)
     role = models.CharField(max_length=100, choices=USER_ROLE_CHOICES, db_index=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'role']
+    REQUIRED_FIELDS = []
 
     objects = UserManager()
 
     def __str__(self):
         return self.email
-
-# class User(models.Model):
-#     TEACHER = "teacher"
-#     STUDENT = "student"
-#     STAFF = "staff"
-#     USER_ROLE_CHOICES = [
-#         (TEACHER, "Teacher"),
-#         (STUDENT, "Student"),
-#         (STAFF, "Staff"),
-#     ]
-#
-#     role = models.CharField(
-#         max_length=100,
-#         choices=USER_ROLE_CHOICES,
-#     )
-#
-#     name = models.CharField(max_length=254)
-#     email = models.EmailField(unique=True, blank=False, validators=[validators.validate_email])
-#     password = models.CharField(max_length=500)
-#
-#     def set_password(self, password):
-#         hasher = UserPBKDF2PasswordHasher()
-#         hash = hasher.encode(password=password, salt='salt').encode(encoding='utf-8')
-#         self.password = base64.b64encode(hash)
-#
-#     def verify_password(self, password):
-#         hasher = UserPBKDF2PasswordHasher()
-#         hash = hasher.encode(password=password, salt='salt').encode(encoding='utf-8')
-#         password = base64.b64encode(hash)
-#         return self.password == password
-#
-#     def __str__(self):
-#         return self.name
 
 
 # class Course(models.Model):

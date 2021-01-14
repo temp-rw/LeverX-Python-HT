@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from .. import models
 from ..models import User
 
 
@@ -16,11 +15,17 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name)
 
 
-class UserSerializer(DynamicFieldsModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(max_length=128, required=False)
+
     class Meta:
         model = User
-        fields = ['email', 'name', 'role', 'is_superuser', 'is_staff', 'password']
-        # extra_kwargs = {'password': {'write_only': True}}
+        fields = ['id', 'email', 'name', 'role', 'is_superuser', 'password', 'new_password']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'is_superuser': {'write_only': True},
+            'new_password': {'read_only': True}
+        }
 
     def create(self, validated_data):
         user = User(**validated_data)
@@ -30,9 +35,20 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
     def update(self, instance, validated_data):
         user = instance
-        if validated_data['password'] is not None:
-            user.set_password(validated_data['password'])
-            user.save()
+        try:
+            new_password = validated_data.pop('new_password')
+        except KeyError:
+            new_password = None
+
+        password = validated_data.pop('password')
+        if new_password and user.check_password(password):
+            user.set_password(new_password)
+
+        fields = validated_data.keys()
+        for key in fields:
+            user.__dict__[key] = validated_data[key]
+        user.save()
+
         return user
 
 
